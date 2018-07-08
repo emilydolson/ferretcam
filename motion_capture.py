@@ -47,7 +47,7 @@ with picamera.PiCamera() as camera:
                 while detect_motion(camera):
                     camera.wait_recording(1)
                     seconds_to_include += 1
-                stream.copy_to('before.h264', seconds=10)
+                stream.copy_to(get_time_string()+'h264', seconds=10)
                 stream.clear()                
                 print('Motion stopped!')
                 camera.split_recording(stream)
