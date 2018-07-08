@@ -25,11 +25,14 @@ def detect_motion(camera):
         current_image = Image.open(stream)
         # Compare current_image to prior_image to detect motion. This is
         # left as an exercise for the reader!
-        curr_hist = current_image.histogram() 
-        prior_hist = prior_image.histogram()
         diff = 0
-        for i in range(len(curr_hist)):
-            diff += abs(curr_hist[i] - prior_hist[i])
+        for x in range(current_image.size()[0]):
+            for y in range(current_image.size()[1]):
+                p = prior_image.getpixel((x,y))
+                c = current_image.getpixel((x,y))
+                for i in range(3):
+                    diff += abs(p[i] - c[i])
+
         result = diff > THRESHOLD
         
         # Once motion detection is done, make the prior image the current
