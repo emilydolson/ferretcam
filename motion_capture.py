@@ -26,12 +26,11 @@ def detect_motion(camera):
         # Compare current_image to prior_image to detect motion. This is
         # left as an exercise for the reader!
         diff = 0
-        for x in range(current_image.size[0]):
-            for y in range(current_image.size[1]):
+        for x in range(0, current_image.size[0], 5):
+            for y in range(0, current_image.size[1], 5):
                 p = prior_image.getpixel((x,y))
                 c = current_image.getpixel((x,y))
-                for i in range(3):
-                    diff += abs(p[i] - c[i])
+                diff += abs(p[1] - c[1])
 
         print(diff)
         result = diff > THRESHOLD
