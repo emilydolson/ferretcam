@@ -9,7 +9,7 @@ import datetime
 prior_image = None
 
 def get_time_string():
-    return str(datetime.datetime.now().)replace(" ", "-")
+    return str(datetime.datetime.now()).replace(" ", "-")
 
 def detect_motion(camera):
     global prior_image
