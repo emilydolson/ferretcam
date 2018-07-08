@@ -26,8 +26,8 @@ def detect_motion(camera):
         # Compare current_image to prior_image to detect motion. This is
         # left as an exercise for the reader!
         diff = 0
-        for x in range(current_image.size()[0]):
-            for y in range(current_image.size()[1]):
+        for x in range(current_image.size[0]):
+            for y in range(current_image.size[1]):
                 p = prior_image.getpixel((x,y))
                 c = current_image.getpixel((x,y))
                 for i in range(3):
