@@ -8,7 +8,7 @@ import datetime
 
 prior_image = None
 
-THRESHOLD = 100
+THRESHOLD = 10000
 
 def get_time_string():
     return datetime.datetime.now().isoformat()
@@ -33,6 +33,7 @@ def detect_motion(camera):
                 for i in range(3):
                     diff += abs(p[i] - c[i])
 
+        print(diff)
         result = diff > THRESHOLD
         
         # Once motion detection is done, make the prior image the current
