@@ -3,8 +3,10 @@
 import io
 import random
 import picamera
-from PIL import Image
+#from PIL import Image
+import numpy as np
 import datetime
+from skimage.measure import compare_ssim as ssim
 
 prior_image = None
 
@@ -19,21 +21,16 @@ def detect_motion(camera):
     camera.capture(stream, format='jpeg', use_video_port=True)
     stream.seek(0)
     if prior_image is None:
-        prior_image = Image.open(stream)
+        prior_image = np.empty((camera.resolution[0], camera.resolution[1], 3), dtype=np.uint8)
+        camera.capture(prior_image, 'rgb')
         return False
     else:
-        current_image = Image.open(stream)
+        current_image = np.empty((camera.resolution[0], camera.resolution[1], 3), dtype=np.uint8)
+        camera.capture(current_image, 'rgb')
+
         # Compare current_image to prior_image to detect motion. This is
         # left as an exercise for the reader!
-        diff = 0
-        for x in range(0, current_image.size[0], 5):
-            for y in range(0, current_image.size[1], 5):
-                p = prior_image.getpixel((x,y))
-                c = current_image.getpixel((x,y))
-                diff += abs(p[1] - c[1])
-
-        print(diff)
-        result = diff > THRESHOLD
+        result = ssim(prior_image, current_image, data_range=prior_image.max() - prior_image.min()) > THRESHOLD
         
         # Once motion detection is done, make the prior image the current
         prior_image = current_image
