@@ -1,4 +1,4 @@
-# Copied from http://picamera.readthedocs.io/en/release-1.12/recipes2.html?highlight=motion
+# Adapted from http://picamera.readthedocs.io/en/release-1.12/recipes2.html?highlight=motion
 
 import io
 import random
