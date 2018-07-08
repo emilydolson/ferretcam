@@ -8,8 +8,10 @@ import datetime
 
 prior_image = None
 
+THRESHOLD = 100
+
 def get_time_string():
-    return str(datetime.datetime.now()).replace(" ", "-")
+    return datetime.datetime.now().isoformat()
 
 def detect_motion(camera):
     global prior_image
@@ -23,7 +25,13 @@ def detect_motion(camera):
         current_image = Image.open(stream)
         # Compare current_image to prior_image to detect motion. This is
         # left as an exercise for the reader!
-        result = random.randint(0, 10) == 0
+        curr_hist = current_image.histogram() 
+        prior_hist = prior_image.histogram()
+        diff = 0
+        for i in range(len(curr_hist)):
+            diff += abs(curr_hist[i] - prior_hist[i])
+        result = diff > THRESHOLD
+        
         # Once motion detection is done, make the prior image the current
         prior_image = current_image
         return result
@@ -41,13 +49,13 @@ with picamera.PiCamera() as camera:
                 # record the frames "after" motion
                 # camera.split_recording('after.h264')
                 # Write the 10 seconds "before" motion to disk as well
-                seconds_to_include = 0
+                seconds_to_include = 5
                 # Wait until motion is no longer detected, then split
                 # recording back to the in-memory circular buffer
                 while detect_motion(camera):
                     camera.wait_recording(1)
                     seconds_to_include += 1
-                stream.copy_to("../rpi-sync/videos/" + get_time_string() + ".h264", seconds=10)
+                stream.copy_to("/home/pi/rpi-sync/videos/" + get_time_string() + ".h264", seconds=seconds_to_include)
                 stream.clear()                
                 print('Motion stopped!')
                 camera.split_recording(stream)
